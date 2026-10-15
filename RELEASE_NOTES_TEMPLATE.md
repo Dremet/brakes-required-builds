@@ -9,10 +9,13 @@ section only when it is empty.
 
 Released: <YYYY-MM-DD>
 
-**Download:** `BrakesRequired-<version>-win64.zip`
+**Download:**
 
-**Requirements:** Windows 10 or 11, 64-bit. Unzip, then start
-`BrakesRequired.exe`.
+- Windows: `BrakesRequired-<version>-win64.zip` (Windows 10 or 11, 64-bit).
+  Unzip, then start `BrakesRequired.exe`.
+- macOS: `BrakesRequired-<version>-macos.dmg` (macOS 11+ on Apple silicon,
+  10.15+ on Intel). Drag the app to Applications; allow the first start under
+  System Settings → Privacy & Security → Open Anyway (see the README).
 
 ### New
 
