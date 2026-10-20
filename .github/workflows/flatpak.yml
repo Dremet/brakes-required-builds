@@ -28,7 +28,7 @@ jobs:
       version: ${{ steps.v.outputs.version }}
       bundle: ${{ steps.v.outputs.bundle }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Version, tar.gz URL and sha256 into the manifest
         id: v
@@ -61,20 +61,21 @@ jobs:
       - name: Bundle size and sha256
         run: ls -l "${{ steps.v.outputs.bundle }}" && sha256sum "${{ steps.v.outputs.bundle }}"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: ${{ steps.v.outputs.bundle }}
           path: ${{ steps.v.outputs.bundle }}
           if-no-files-found: error
 
+  # A plain runner without the runtime, so the install fetches
+  # org.freedesktop.Platform from Flathub the way a player's does.
   smoke:
     needs: build
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/flathub-infra/flatpak-github-actions:freedesktop-26.08
-      options: --privileged
     steps:
-      - uses: actions/download-artifact@v4
+      - name: Install flatpak
+        run: sudo apt-get update -q && sudo apt-get install -y -q flatpak
+      - uses: actions/download-artifact@v5
         with:
           name: ${{ needs.build.outputs.bundle }}
 
@@ -103,7 +104,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         with:
           name: ${{ needs.build.outputs.bundle }}
       - name: Attach to the release
