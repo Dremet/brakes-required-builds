@@ -11,11 +11,15 @@ Released: <YYYY-MM-DD>
 
 **Download:**
 
-- Windows: `BrakesRequired-<version>-win64.zip` (Windows 10 or 11, 64-bit).
+- Windows: `BrakesRequired-<version>-win64.zip`. Windows 10 or 11, 64-bit.
   Unzip, then start `BrakesRequired.exe`.
-- macOS: `BrakesRequired-<version>-macos.dmg` (macOS 11+ on Apple silicon,
-  10.15+ on Intel). Drag the app to Applications; allow the first start under
-  System Settings → Privacy & Security → Open Anyway (see the README).
+- macOS: `BrakesRequired-<version>-macos.dmg`. macOS 11 or newer on Apple
+  silicon, 10.15 or newer on Intel. Open the DMG, drag `Brakes Required` onto
+  `Applications`, then start it from there. The first start needs
+  **Open Anyway** under System Settings → Privacy & Security; see the
+  [README](https://github.com/Dremet/brakes-required-builds#install-and-start-on-macos).
+
+Delete the line of a platform the release does not carry.
 
 ### New
 
@@ -34,6 +38,9 @@ Released: <YYYY-MM-DD>
 - <what is still broken, and how to work around it>
 
 ### Report a problem
+
+Please report bugs in the **#bugs** channel on Discord:
+https://discord.gg/2sByBExEwy
 
 The version is in the bottom left corner of the screen. Click the field and
 press Ctrl+C to copy it. Give that string in your report.
