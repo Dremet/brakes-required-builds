@@ -1,0 +1,112 @@
+# Builds the Flatpak bundle BrakesRequired-<version>-linux-x86_64.flatpak from
+# the release's Linux tar.gz, then installs it in a fresh container and starts
+# it headless. Manual run: gh workflow run flatpak.yml -f version=0.3.0
+# On a published release it also attaches the bundle to that release.
+name: Flatpak bundle
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Release version without the v (e.g. 0.3.0)
+        required: true
+  release:
+    types: [published]
+
+env:
+  APP_ID: games.dremet.BrakesRequired
+  # Keep in sync with runtime-version in the manifest.
+  RUNTIME: freedesktop-26.08
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/flathub-infra/flatpak-github-actions:freedesktop-26.08
+      options: --privileged
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+      bundle: ${{ steps.v.outputs.bundle }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Version, tar.gz URL and sha256 into the manifest
+        id: v
+        shell: bash
+        run: |
+          set -euo pipefail
+          V="${{ github.event.inputs.version }}"
+          if [ -z "$V" ]; then V="${GITHUB_REF_NAME#v}"; fi
+          URL="https://github.com/${GITHUB_REPOSITORY}/releases/download/v${V}/BrakesRequired-${V}-linux-x86_64.tar.gz"
+          curl -fsSL -o linux.tar.gz "$URL"
+          SHA=$(sha256sum linux.tar.gz | cut -d' ' -f1)
+          M=flatpak/${APP_ID}.yml
+          sed -i -E "s#^(\s*url: ).*linux-x86_64\.tar\.gz#\1${URL}#; s#^(\s*sha256: ).*#\1${SHA}#" "$M"
+          # A release entry for this version in the AppStream file.
+          X=flatpak/${APP_ID}.metainfo.xml
+          if ! grep -q "release version=\"${V}\"" "$X"; then
+            sed -i "s#<releases>#<releases>\n    <release version=\"${V}\" date=\"$(date -u +%F)\"/>#" "$X"
+          fi
+          grep -E 'url:|sha256:' "$M"
+          echo "version=$V" >> "$GITHUB_OUTPUT"
+          echo "bundle=BrakesRequired-${V}-linux-x86_64.flatpak" >> "$GITHUB_OUTPUT"
+
+      - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        with:
+          manifest-path: flatpak/games.dremet.BrakesRequired.yml
+          bundle: ${{ steps.v.outputs.bundle }}
+          cache-key: flatpak-builder-${{ github.sha }}
+          upload-artifact: false
+
+      - name: Bundle size and sha256
+        run: ls -l "${{ steps.v.outputs.bundle }}" && sha256sum "${{ steps.v.outputs.bundle }}"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.v.outputs.bundle }}
+          path: ${{ steps.v.outputs.bundle }}
+          if-no-files-found: error
+
+  smoke:
+    needs: build
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/flathub-infra/flatpak-github-actions:freedesktop-26.08
+      options: --privileged
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.build.outputs.bundle }}
+
+      - name: Install the bundle like a player
+        shell: bash
+        run: |
+          set -euo pipefail
+          flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+          flatpak install --user -y --noninteractive "${{ needs.build.outputs.bundle }}"
+          flatpak info --user "$APP_ID"
+
+      - name: Start headless and check it is a public build
+        shell: bash
+        run: |
+          set -euo pipefail
+          # --unshare=network: the check must not sign up a live online user.
+          timeout 120 flatpak run --user --unshare=network \
+            --command=BrakesRequired.x86_64 "$APP_ID" \
+            --headless -- --print-dev-build 2>&1 | tee smoke.log || true
+          grep -E '^DEV_BUILD dev_tools=false' smoke.log
+
+  attach:
+    if: github.event_name == 'release'
+    needs: [build, smoke]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.build.outputs.bundle }}
+      - name: Attach to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "v${{ needs.build.outputs.version }}" "${{ needs.build.outputs.bundle }}" --clobber --repo "$GITHUB_REPOSITORY"

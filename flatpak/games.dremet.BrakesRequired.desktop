@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Brakes Required
+Comment=Semi-realistic 3D low-poly racing game
+Exec=BrakesRequired.x86_64
+Icon=games.dremet.BrakesRequired
+Terminal=false
+Categories=Game;Simulation;
+Keywords=racing;cars;hotlap;leaderboard;
