@@ -1,4 +1,4 @@
-# Brakes Required — builds for Windows and macOS
+# Brakes Required — builds for Windows, macOS and Linux
 
 **Brakes Required** is a semi-realistic 3D low-poly racing game for PC.
 Website: [dremet.games](https://dremet.games)
@@ -17,7 +17,7 @@ page; the easiest way is the Downloads section on [dremet.games](https://dremet.
 | --- | --- | --- |
 | Windows | `BrakesRequired-<version>-win64.zip` | Windows 10 or 11, 64-bit |
 | macOS | `BrakesRequired-<version>-macos.dmg` | macOS 11 or newer (Apple silicon), macOS 10.15 or newer (Intel) |
-| Linux | — | coming soon |
+| Linux | `BrakesRequired-<version>-linux-x86_64.tar.gz` | 64-bit x86, Vulkan graphics drivers (new, less tested) |
 
 Versions marked **Pre-release** are playtest builds.
 
@@ -57,6 +57,15 @@ xattr -dr com.apple.quarantine "/Applications/Brakes Required.app"
 ```
 
 To remove the game, move it from Applications to the Trash.
+
+## Install and start on Linux
+
+1. Download `BrakesRequired-<version>-linux-x86_64.tar.gz`.
+2. Unpack it into an empty folder (`tar -xzf BrakesRequired-<version>-linux-x86_64.tar.gz`).
+3. Start `./BrakesRequired.x86_64` from a file manager or a terminal.
+
+The game needs Vulkan graphics drivers. Linux builds are new and less tested
+than Windows and macOS; please report problems.
 
 ## Online leaderboards
 
