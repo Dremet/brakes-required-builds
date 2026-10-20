@@ -31,6 +31,12 @@ There is no installer. To remove the game, delete the folder.
 Windows can show a SmartScreen warning, because the build has no code
 signature. Select **More info**, then **Run anyway**.
 
+**Smart App Control** (Windows 11) blocks the game without a **Run anyway**
+option, because the build is not code-signed yet. The only way around it is to
+turn it off: Windows Security → App & browser control → Smart App Control
+settings → Off. On some Windows versions it can only be turned on again by
+reinstalling Windows, so decide that for yourself.
+
 ## Install and start on macOS
 
 1. Open the `.dmg` file. A window opens with **Brakes Required** and an
