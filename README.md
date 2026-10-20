@@ -9,7 +9,9 @@ source code and no reusable art source files.
 ## Download
 
 Get the newest build from the
-[Releases page](https://github.com/Dremet/brakes-required-builds/releases).
+[latest release](https://github.com/Dremet/brakes-required-builds/releases/latest).
+The download files are listed under **Assets** at the bottom of the release
+page; the easiest way is the Downloads section on [dremet.games](https://dremet.games).
 
 | Platform | File | Requirements |
 | --- | --- | --- |
