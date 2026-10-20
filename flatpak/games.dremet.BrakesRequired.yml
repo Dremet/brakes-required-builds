@@ -1,0 +1,47 @@
+# Flatpak bundle of the released Linux build (no Flathub listing yet).
+# Built by .github/workflows/flatpak.yml; it rewrites url + sha256 below for
+# the version it builds, so this file names the last bundled release.
+app-id: games.dremet.BrakesRequired
+runtime: org.freedesktop.Platform
+runtime-version: '26.08'
+sdk: org.freedesktop.Sdk
+command: BrakesRequired.x86_64
+finish-args:
+  # Online leaderboards and ghosts (Supabase over HTTPS).
+  - --share=network
+  # X11 shared memory; without it X11 rendering is slow or fails.
+  - --share=ipc
+  # Godot 4.7 picks X11 first (its "default" display driver order is X11,
+  # then Wayland). On a Wayland desktop it runs through XWayland, exactly like
+  # the tar.gz build. No --socket=wayland: Godot would not use it while X11
+  # works, and native Wayland is the less tested path.
+  - --socket=x11
+  # Engine, tyre and surface sounds.
+  - --socket=pulseaudio
+  # GPU (Vulkan) and gamepads (/dev/input) live under /dev; --device=dri
+  # would cover only the GPU.
+  - --device=all
+  # No filesystem access: saves go to ~/.var/app/games.dremet.BrakesRequired/.
+modules:
+  - name: brakes-required
+    buildsystem: simple
+    build-commands:
+      - install -Dm755 BrakesRequired.x86_64 /app/bin/BrakesRequired.x86_64
+      - install -Dm644 games.dremet.BrakesRequired.desktop /app/share/applications/games.dremet.BrakesRequired.desktop
+      - install -Dm644 games.dremet.BrakesRequired.metainfo.xml /app/share/metainfo/games.dremet.BrakesRequired.metainfo.xml
+      - install -Dm644 games.dremet.BrakesRequired-256.png /app/share/icons/hicolor/256x256/apps/games.dremet.BrakesRequired.png
+      - install -Dm644 games.dremet.BrakesRequired-512.png /app/share/icons/hicolor/512x512/apps/games.dremet.BrakesRequired.png
+    sources:
+      - type: archive
+        url: https://github.com/Dremet/brakes-required-builds/releases/download/v0.3.0/BrakesRequired-0.3.0-linux-x86_64.tar.gz
+        sha256: f22841ca8b8f12ea9ebb22c38d8b946f152990b3cce65f0c1b7a96b6bc082754
+        # The tar holds the binary at its top level, no folder to strip.
+        strip-components: 0
+      - type: file
+        path: games.dremet.BrakesRequired.desktop
+      - type: file
+        path: games.dremet.BrakesRequired.metainfo.xml
+      - type: file
+        path: games.dremet.BrakesRequired-256.png
+      - type: file
+        path: games.dremet.BrakesRequired-512.png
