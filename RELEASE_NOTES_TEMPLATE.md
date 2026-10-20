@@ -18,6 +18,13 @@ Released: <YYYY-MM-DD>
   `Applications`, then start it from there. The first start needs
   **Open Anyway** under System Settings → Privacy & Security; see the
   [README](https://github.com/Dremet/brakes-required-builds#install-and-start-on-macos).
+- Linux: `BrakesRequired-<version>-linux-x86_64.tar.gz`. 64-bit x86, Vulkan
+  graphics drivers. Unpack, then start `./BrakesRequired.x86_64`.
+- Linux (Flatpak): `BrakesRequired-<version>-linux-x86_64.flatpak`.
+  `flatpak install --user BrakesRequired-<version>-linux-x86_64.flatpak`, then
+  `flatpak run games.dremet.BrakesRequired`. Needs the Flathub remote for the
+  runtime; see the
+  [README](https://github.com/Dremet/brakes-required-builds#flatpak).
 
 Delete the line of a platform the release does not carry.
 

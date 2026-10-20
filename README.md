@@ -18,6 +18,7 @@ page; the easiest way is the Downloads section on [dremet.games](https://dremet.
 | Windows | `BrakesRequired-<version>-win64.zip` | Windows 10 or 11, 64-bit |
 | macOS | `BrakesRequired-<version>-macos.dmg` | macOS 11 or newer (Apple silicon), macOS 10.15 or newer (Intel) |
 | Linux | `BrakesRequired-<version>-linux-x86_64.tar.gz` | 64-bit x86, Vulkan graphics drivers (new, less tested) |
+| Linux (Flatpak) | `BrakesRequired-<version>-linux-x86_64.flatpak` | 64-bit x86, Flatpak, Vulkan graphics drivers (new, less tested) |
 
 Versions marked **Pre-release** are playtest builds.
 
@@ -73,6 +74,26 @@ To remove the game, move it from Applications to the Trash.
 The game needs Vulkan graphics drivers. Linux builds are new and less tested
 than Windows and macOS; please report problems.
 
+### Flatpak
+
+The same game as a single Flatpak file (not on Flathub yet). It needs the
+Flathub remote for its runtime (`org.freedesktop.Platform`), which many
+distributions already have:
+
+```
+flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+flatpak install --user BrakesRequired-<version>-linux-x86_64.flatpak
+flatpak run games.dremet.BrakesRequired
+```
+
+After the install the game is also in your application menu. There are no
+automatic updates: install the next version's file the same way. To remove
+it: `flatpak uninstall --user games.dremet.BrakesRequired`.
+
+The Flatpak keeps its own saved data, separate from the tar.gz build (see
+below), so it asks for a nickname again. To keep your nickname and times,
+copy the tar.gz build's folder into the Flatpak's before its first start.
+
 ## Online leaderboards
 
 Since 0.3.0 your laps go to the online leaderboards on
@@ -89,6 +110,8 @@ build. They live outside the game folder:
 
 - Windows: `%APPDATA%\Godot\app_userdata\Brakes Required`
 - macOS: `~/Library/Application Support/Godot/app_userdata/Brakes Required`
+- Linux (tar.gz): `~/.local/share/godot/app_userdata/Brakes Required`
+- Linux (Flatpak): `~/.var/app/games.dremet.BrakesRequired/data/godot/app_userdata/Brakes Required`
 
 Keep this folder: it holds your online identity. Without it the game asks for
 a new nickname.
