@@ -105,8 +105,10 @@ offline; laps upload once you are online again.
 
 ## Saved data
 
-Best times, settings and your online nickname stay when you install a newer
-build. They live outside the game folder:
+Settings, best times and your online nickname live outside the game folder,
+so they stay when you install a newer build. Best times belong to one physics
+version: a release that changes the driving physics or the timing (like 0.3.1)
+starts with fresh best times and new, empty leaderboards. They live here:
 
 - Windows: `%APPDATA%\Godot\app_userdata\Brakes Required`
 - macOS: `~/Library/Application Support/Godot/app_userdata/Brakes Required`
